@@ -1,0 +1,82 @@
+{
+  "summary": "Hello World Intellij Course for testing setup. \n\nApache Beam website – https://beam.apache.org/",
+  "title": "Hello World Intellij - Java",
+  "programming_language": "JAVA",
+  "language": "en",
+  "items": [
+    {
+      "id": 0,
+      "update_date": "Jan 1, 1970 8:00:00 AM",
+      "title": "Introduction",
+      "task_list": [
+        {
+          "name": "Hello World",
+          "stepic_id": 0,
+          "task_files": {
+            "src/Task.java": {
+              "name": "src/Task.java",
+              "placeholders": [
+                {
+                  "offset": 641,
+                  "length": 6,
+                  "hints": [
+                    ""
+                  ],
+                  "possible_answer": "pipeline.apply(Create.of(\"Hello World\"))",
+                  "placeholder_text": "/* code here */"
+                }
+              ],
+              "is_visible": true,
+              "text": "import org.apache.beam.sdk.Pipeline;\nimport org.apache.beam.sdk.options.PipelineOptions;\nimport org.apache.beam.sdk.options.PipelineOptionsFactory;\nimport org.apache.beam.sdk.transforms.Create;\nimport org.apache.beam.sdk.values.PCollection;\n\nclass Task {\n\n  public static void main(String[] args) {\n    PipelineOptions options \u003d PipelineOptionsFactory.fromArgs(args).create();\n    Pipeline pipeline \u003d Pipeline.create(options);\n\n    PCollection\u003cString\u003e output \u003d setupPipeline(pipeline);\n\n     pipeline.run();\n  }\n\n  static PCollection\u003cString\u003e setupPipeline(Pipeline pipeline) {\n    return /* code here */;\n  }\n\n}"
+            }
+          },
+          "test_files": {
+            "test/TaskTest.java": "import java.io.Serializable;\nimport org.apache.beam.sdk.testing.PAssert;\nimport org.apache.beam.sdk.testing.TestPipeline;\nimport org.apache.beam.sdk.values.PCollection;\nimport org.junit.Rule;\nimport org.junit.Test;\n\npublic class TaskTest implements Serializable {\n\n  @Rule\n  public final transient TestPipeline testPipeline \u003d TestPipeline.create();\n\n  @Test\n  public void helloWorld() {\n    PCollection\u003cString\u003e results \u003d Task.setupPipeline(testPipeline);\n\n    PAssert.that(results)\n        .containsInAnyOrder(\"Hello World\");\n\n    testPipeline.run().waitUntilFinish();\n  }\n\n}"
+          },
+          "description_text": "\u003chtml\u003e\n\u003ch2\u003eHello World Pipeline\u003c/h2\u003e\n\u003cp\u003e \"Hello World\"\u003c/p\u003e\n\u003c/html\u003e",
+          "description_format": "html",
+          "additional_files": {},
+          "update_date": "Jan 1, 1970 8:00:00 AM",
+          "feedback_link": {
+            "link_type": "STEPIK"
+          },
+          "task_type": "edu"
+        }
+      ],
+      "unit_id": 0,
+      "type": "lesson"
+    },
+    {
+      "id": 0,
+      "update_date": "Jan 1, 1970 8:00:00 AM",
+      "title": "Edu additional materials",
+      "task_list": [
+        {
+          "name": "Edu additional materials",
+          "stepic_id": 0,
+          "task_files": {},
+          "test_files": {},
+          "description_format": "html",
+          "additional_files": {
+            "settings.gradle": {
+              "is_visible": false,
+              "text": "static String sanitizeName(String name) {\n    return name.replaceAll(\"[ /\\\\\\\\:\u003c\u003e\\\"?*|]\", \"_\")\n}\n\nrootProject.name \u003d sanitizeName(\u0027kata\u0027)\n\nrootProject.projectDir.eachDirRecurse {\n    if (!isTaskDir(it) || it.path.contains(\".idea\")) {\n        return\n    }\n    def taskRelativePath \u003d rootDir.toPath().relativize(it.toPath())\n    def parts \u003d []\n    for (name in taskRelativePath) {\n        parts.add(sanitizeName(name.toString()))\n    }\n    def moduleName \u003d  parts.join(\"-\")\n    include \"$moduleName\"\n    project(\":$moduleName\").projectDir \u003d it\n}\n\ndef isTaskDir(File dir) {\n    return new File(dir, \"src\").exists()\n}\n\ninclude \u0027util\u0027"
+            },
+            "build.gradle": {
+              "is_visible": false,
+              "text": "buildscript {\n  ext {\n    beamVersion \u003d \u00272.8.0\u0027\n    guavaVersion \u003d \u002727.0-jre\u0027\n    jodaTimeVersion \u003d \u00272.10.1\u0027\n    slf4jVersion \u003d \u00271.7.25\u0027\n\n    assertjVersion \u003d \u00273.11.1\u0027\n    hamcrestVersion \u003d \u00271.3\u0027\n    junitVersion \u003d \u00274.12\u0027\n  }\n  \n  repositories {\n    mavenCentral()\n  }\n}\n\ndef printOutput(def output) {\n  return tasks.create(\"printOutput\") {\n    for (line in output.toString().readLines()) {\n      println \"#educational_plugin\" + line\n    }\n  }\n}\n\nsubprojects {\n  apply plugin: \u0027application\u0027\n  apply plugin: \u0027java\u0027\n\n  sourceCompatibility \u003d 1.8\n\n  repositories {\n    mavenCentral()\n  }\n\n  dependencies {\n    compile \"org.apache.beam:beam-sdks-java-core:$beamVersion\"\n    runtime \"org.apache.beam:beam-runners-direct-java:$beamVersion\"\n\n    compile \"joda-time:joda-time:$jodaTimeVersion\"\n    compile \"org.slf4j:slf4j-api:$slf4jVersion\"\n    compile \"org.slf4j:slf4j-jdk14:$slf4jVersion\"\n    compile \"com.google.guava:guava:$guavaVersion\"\n\n    testCompile \"junit:junit:$junitVersion\"\n    testCompile \"org.hamcrest:hamcrest-core:$hamcrestVersion\"\n    testCompile \"org.hamcrest:hamcrest-library:$hamcrestVersion\"\n    testCompile \"org.assertj:assertj-core:$assertjVersion\"\n  }\n\n  sourceSets {\n    main {\n      java.srcDir \u0027src\u0027\n    }\n    test {\n      java.srcDir \u0027test\u0027\n    }\n  }\n\n  mainClassName \u003d project.hasProperty(\"mainClass\") ? project.getProperty(\"mainClass\") : \"\"\n\n  test {\n    outputs.upToDateWhen { false }\n    afterTest { TestDescriptor test, TestResult result -\u003e\n      if (result.resultType \u003d\u003d TestResult.ResultType.FAILURE) {\n        def message \u003d result.exception?.message ?: \"Wrong answer\"\n        def lines \u003d message.readLines()\n        println \"#educational_plugin FAILED + \" + lines[0]\n        lines[1..-1].forEach { line -\u003e\n          println \"#educational_plugin\" + line\n        }\n        // we need this to separate output of different tests\n        println\n      }\n    }\n  }\n\n  def runOutput \u003d new ByteArrayOutputStream()\n  tasks.run.setStandardOutput(runOutput)\n  tasks.run.doLast { printOutput(runOutput) }\n}\n\nproject(\u0027:util\u0027) {\n  dependencies {\n    compile \"junit:junit:$junitVersion\"\n  }\n}\n\nconfigure(subprojects.findAll { it.name !\u003d \u0027util\u0027 }) {\n  dependencies {\n    compile project(\u0027:util\u0027).sourceSets.main.output\n    testCompile project(\u0027:util\u0027).sourceSets.test.output\n  }\n}\n\ntask wrapper(type: Wrapper) {\n  gradleVersion \u003d \u00274.8\u0027\n}\n"
+            }
+          },
+          "update_date": "Jan 1, 1970 8:00:00 AM",
+          "feedback_link": {
+            "link_type": "STEPIK"
+          },
+          "task_type": "edu"
+        }
+      ],
+      "unit_id": 0,
+      "type": "lesson"
+    }
+  ],
+  "version": 7
+}
